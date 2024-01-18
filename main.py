@@ -5,6 +5,7 @@ from handlers import (
     start_router,
     pictures_router,
     kinopoisk_router,
+    movie_survey_router
 )
 
 
@@ -13,7 +14,7 @@ async def main():
     dp.include_router(start_router)
     dp.include_router(pictures_router)
     dp.include_router(kinopoisk_router)
-
+    dp.include_router(movie_survey_router)
     await dp.start_polling(bot)
 
 

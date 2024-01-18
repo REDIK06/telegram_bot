@@ -15,4 +15,5 @@ async def set_commands():
         types.BotCommand(command="start", description="Старт"),
         types.BotCommand(command="pic", description="Отправить картинку"),
         types.BotCommand(command="kinopoisk", description="Кинопоиск"),
+        types.BotCommand(command="survey", description="Опрос о фильмах"),
     ])
