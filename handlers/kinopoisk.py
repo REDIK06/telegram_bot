@@ -1,5 +1,6 @@
 from aiogram import Router, F, types
 from aiogram.filters import Command
+from db.queries import get_kinopoisk
 
 kinopoisk_router = Router()
 
@@ -29,6 +30,7 @@ async def show_kinopoisk(message: types.Message):
                 types.KeyboardButton(text="Top-9"),
                 types.KeyboardButton(text="Top-10"),
             ]
+
         ],
         resize_keyboard=True
     )
@@ -128,3 +130,13 @@ async def about_top10(message: types.Message):
                          "ЖАНPЫ:\n"
                          "драма\n"
                          "биография", reply_markup=kb)
+
+
+@kinopoisk_router.message(F.text.lower() == "фильм")
+async def show_movie(message: types.Message):
+    movies = get_kinopoisk()
+    if movies:
+        movie_list = "\n".join([f"{index + 1}. {movie[0]}" for index, movie in enumerate(movies)])
+        await message.answer(f"Список фильмов:\n{movie_list}")
+    else:
+        await message.answer("Список фильмов пуст.")

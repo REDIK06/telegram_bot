@@ -27,5 +27,4 @@ async def start(message: types.Message):
 @start_router.callback_query(F.data == "about_netflix")
 async def about_netflix(callback: types.CallbackQuery):
     await callback.answer()
-
     await callback.message.answer("Американская развлекательная компания, а также стриминговый сервис фильмов и сериалов.🎥")
