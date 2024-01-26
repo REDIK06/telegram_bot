@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 movie_survey_router = Router()
 
 
-class FreeLessonReg(StatesGroup):
+class MoviePoll(StatesGroup):
     name = State()
     whats_your_gender = State()
     age = State()
@@ -64,7 +64,7 @@ def gender_kb():
 
 @movie_survey_router.message(Command("survey"))
 async def start_survey(message: types.Message, state: FSMContext):
-    await state.set_state(FreeLessonReg.whats_your_gender)
+    await state.set_state(MoviePoll.whats_your_gender)
     await message.answer("Приступим к проведению опроса! Можете остановить опрос командой /cancel")
     await message.answer("Как Вас зовут?")
 
@@ -76,21 +76,21 @@ async def cancel_registration(message: types.Message, state: FSMContext):
     await message.answer("Проведение опроса приостановлено")
 
 
-@movie_survey_router.message(FreeLessonReg.whats_your_gender)
+@movie_survey_router.message(MoviePoll.whats_your_gender)
 async def process_whats_your_gender(message: types.Message, state: FSMContext):
     await state.update_data(whats_your_gender=message.text)
-    await state.set_state(FreeLessonReg.name)
+    await state.set_state(MoviePoll.name)
     await message.answer("ваш пол(мужской/женский)", reply_markup=gender_kb())
 
 
-@movie_survey_router.message(FreeLessonReg.name)
+@movie_survey_router.message(MoviePoll.name)
 async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
-    await state.set_state(FreeLessonReg.age)
+    await state.set_state(MoviePoll.age)
     await message.answer("Сколько Вам лет?")
 
 
-@movie_survey_router.message(FreeLessonReg.age)
+@movie_survey_router.message(MoviePoll.age)
 async def process_age(message: types.Message, state: FSMContext):
     if not message.text.isdigit():
         await message.answer("Возраст должен быть числом")
@@ -99,34 +99,34 @@ async def process_age(message: types.Message, state: FSMContext):
     else:
         age = int(message.text)
         await state.update_data(age=age)
-        await state.set_state(FreeLessonReg.movie_genre)
+        await state.set_state(MoviePoll.movie_genre)
         await message.answer("Выберите ваш любимый жанр фильма", reply_markup=genre_kb())
 
 
-@movie_survey_router.message(FreeLessonReg.movie_genre)
+@movie_survey_router.message(MoviePoll.movie_genre)
 async def process_movie_genre(message: types.Message, state: FSMContext):
     await state.update_data(movie_genre=message.text)
-    await state.set_state(FreeLessonReg.movie_frequency)
+    await state.set_state(MoviePoll.movie_frequency)
     await message.answer("Как часто смотрите фильмы?", reply_markup=time_kb())
 
 
-@movie_survey_router.message(FreeLessonReg.movie_frequency)
+@movie_survey_router.message(MoviePoll.movie_frequency)
 async def process_movie_frequency(message: types.Message, state: FSMContext):
-    await state.set_state(FreeLessonReg.favorite_movie)
+    await state.set_state(MoviePoll.favorite_movie)
     await message.answer("Ваш любимый фильм")
 
 
-@movie_survey_router.message(FreeLessonReg.favorite_movie)
+@movie_survey_router.message(MoviePoll.favorite_movie)
 async def process_favorite_movie(message: types.Message, state: FSMContext):
     if not message.text.isalpha():
         await message.answer("Пожалуйста, введите только буквы, а не числа.")
     else:
         await state.update_data(favorite_movie=message.text)
-        await state.set_state(FreeLessonReg.recommended_movie)
+        await state.set_state(MoviePoll.recommended_movie)
         await message.answer("Какой фильм вы порекомендуете?")
 
 
-@movie_survey_router.message(FreeLessonReg.recommended_movie)
+@movie_survey_router.message(MoviePoll.recommended_movie)
 async def process_recommended_movie(message: types.Message, state: FSMContext):
     await state.update_data(recommended_movie=message.text)
     data = await state.get_data()
