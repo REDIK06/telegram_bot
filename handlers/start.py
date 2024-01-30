@@ -1,6 +1,5 @@
 from aiogram import Router, F, types
 from aiogram.filters import Command
-from pprint import pprint
 
 start_router = Router()
 

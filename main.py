@@ -7,6 +7,7 @@ from handlers import (
     kinopoisk_router,
     movie_survey_router
 )
+from parser import parse_router
 from db.queries import init_db, create_tables, populate_db
 
 
@@ -23,10 +24,9 @@ async def main():
     dp.include_router(pictures_router)
     dp.include_router(kinopoisk_router)
     dp.include_router(movie_survey_router)
-    dp.startup.register(on_startup)
+    dp.include_router(parse_router)
 
     await dp.start_polling(bot)
-
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)

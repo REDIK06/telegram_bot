@@ -5,10 +5,12 @@ from pprint import pprint
 db = None
 cursor = None
 
+
 def init_db():
     global db, cursor
     db = sqlite3.connect(Path(__file__).resolve().parent.parent / "db.sqlite")
     cursor = db.cursor()
+
 
 def create_tables():
     cursor.execute("""
@@ -34,6 +36,18 @@ def create_tables():
             duration TEXT,
             year INTEGER,
             FOREIGN KEY (genre_id) REFERENCES genres(id)
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS movie_survey (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name  TEXT,
+            whats_your_gender  TEXT,
+            age  INTEGER,
+            movie_genre  TEXT,
+            movie_frequency  TEXT,
+            favorite_movie  TEXT,
+            recommended_movie  TEXT
         )
     """)
 
@@ -76,6 +90,14 @@ def get_movies_by_genre(genre_id):
         SELECT * FROM kinopoisk WHERE genre_id = ?
     """, (genre_id,))
     return cursor.fetchall()
+
+
+def save_movie_survey_data(data: dict):
+    cursor.execute("""
+        INSERT INTO movie_survey (name, whats_your_gender, age, movie_genre, movie_frequency, favorite_movie, recommended_movie)
+        VALUES (:name, :whats_your_gender, :age, :movie_genre, :movie_frequency, :favorite_movie, :recommended_movie)
+    """, data)
+    db.commit()
 
 
 if __name__ == "__main__":

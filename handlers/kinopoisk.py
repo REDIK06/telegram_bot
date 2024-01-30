@@ -3,6 +3,7 @@ from aiogram.filters import Command
 from db.queries import get_movies_by_genre
 
 
+
 kinopoisk_router = Router()
 
 
@@ -191,4 +192,7 @@ async def about_top10(message: types.Message):
     #                      "ЖАНPЫ:\n"
     #                      "драма\n"
     #                      "биография", reply_markup=kb)
+
+
+
 

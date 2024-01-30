@@ -2,6 +2,9 @@ from aiogram import Router, F, types
 from aiogram.filters import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
+from keyboards.kinopoisk_keyboard import genre_kb, time_kb, gender_kb
+from db.queries import save_movie_survey_data
+
 
 movie_survey_router = Router()
 
@@ -14,52 +17,6 @@ class MoviePoll(StatesGroup):
     movie_frequency = State()
     favorite_movie = State()
     recommended_movie = State()
-
-
-def genre_kb():
-    kb = types.ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                types.KeyboardButton(text="Фантастика"),
-                types.KeyboardButton(text="Драма")
-            ],
-            [
-                types.KeyboardButton(text="Комедия"),
-                types.KeyboardButton(text="Боевик")
-            ],
-        ]
-    )
-    return kb
-
-
-def time_kb():
-    kb = types.ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                types.KeyboardButton(text="Часто"),
-                types.KeyboardButton(text="Не часто")
-            ],
-            [
-                types.KeyboardButton(text="Периодически"),
-                types.KeyboardButton(text="Регулярно")
-            ],
-        ]
-    )
-    return kb
-
-
-def gender_kb():
-    kb = types.ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                types.KeyboardButton(text="Мужской"),
-            ],
-            [
-                types.KeyboardButton(text="Женский"),
-            ],
-        ]
-    )
-    return kb
 
 
 @movie_survey_router.message(Command("survey"))
@@ -132,4 +89,5 @@ async def process_recommended_movie(message: types.Message, state: FSMContext):
     data = await state.get_data()
     await message.answer(f"Ваши данные: {data}")
     await message.answer("Благодарим за пройдённый опрос!")
+    save_movie_survey_data(data)
     await state.clear()
