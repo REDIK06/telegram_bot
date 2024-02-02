@@ -1,11 +1,12 @@
 import asyncio
 import logging
-from bot import bot, dp, set_commands
+from bot import bot, dp, set_commands, scheduler
 from handlers import (
     start_router,
     pictures_router,
     kinopoisk_router,
-    movie_survey_router
+    movie_survey_router,
+    scheduler_router
 )
 from parser import parse_router
 from db.queries import init_db, create_tables, populate_db
@@ -25,6 +26,9 @@ async def main():
     dp.include_router(kinopoisk_router)
     dp.include_router(movie_survey_router)
     dp.include_router(parse_router)
+    dp.include_router(scheduler_router)
+
+    scheduler.start()
 
     await dp.start_polling(bot)
 
