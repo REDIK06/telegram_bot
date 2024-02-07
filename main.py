@@ -6,7 +6,8 @@ from handlers import (
     pictures_router,
     kinopoisk_router,
     movie_survey_router,
-    scheduler_router
+    scheduler_router,
+    group_administration_router
 )
 from parser import parse_router
 from db.queries import init_db, create_tables, populate_db
@@ -27,6 +28,7 @@ async def main():
     dp.include_router(movie_survey_router)
     dp.include_router(parse_router)
     dp.include_router(scheduler_router)
+    dp.include_router(group_administration_router)
 
     scheduler.start()
 
